@@ -19,12 +19,16 @@
                 {% if request.user.is_admin %}
                 <a href="{% url 'update_product' product.pk %}">Изменить продукт</a>
                 {% endif %}
+                {% if user.is_authenticated %}
                 <form action="{% url 'create_purchase' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ purchase_form }}
                     <input type="hidden" name="product_id" value="{{ product.id }}">
                     <button type="submit" value="buy">Купить</button>
                 </form>
+                {% else %}
+
+                {% endif %}
             </div>
         </div>
     </div>

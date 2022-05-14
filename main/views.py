@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -64,7 +64,7 @@ class ReturnPurchaseView(CreateView):
     model = ReturnPurchase
     form_class = PurchaseReturnForm
     template_name = 'main/return_purchase.html'
-    success_url = '/'
+    success_url = '/purchase/'
 
     def form_valid(self, form):
         object = form.save(commit=False)
@@ -99,13 +99,15 @@ class PurchaseReturnView(PermissionRequiredMixin, ListView):
     template_name = 'main/return_purchase.html'
 
 
-class DeleteReturn(DeleteView):
+class DeleteReturn(PermissionRequiredMixin, DeleteView):
+    permission_required = 'is_superuser'
     model = ReturnPurchase
     template_name = 'main/delete_return.html'
     success_url = '/'
 
 
-class DeletePurchase(DeleteView):
+class DeletePurchase(PermissionRequiredMixin, DeleteView):
+    permission_required = 'is_superuser'
     model = Purchase
     template_name = 'main/delete_purchase.html'
     success_url = '/'
