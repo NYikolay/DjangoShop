@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Возвраты{% endblock %}
+
+{% block content %}
+
+Возвраты:
+<a href="{{ request.META.HTTP_REFERER }}">Вернуться на главную страницу</a>
+
+{% for return in object_list %}
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ return.purchase.product.title }}</h5>
+                <p class="card-text">{{ return.purchase.product.description }}</p>
+                <p class="card-text">Запрашивает: {{ return.purchase.user }}</p>
+                <form method="post" action="{% url 'delete_purchase' return.purchase.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_pk" value="{{ return.purchase.product.pk }}">
+                    <input type="hidden" name="product_price" value="{{ return.purchase.product.price }}">
+                    <input type="hidden" name="purchase_quantity" value="{{ return.purchase.quantity_of_products }}">
+                    <input type="hidden" name="purchase_user" value="{{ return.purchase.user.pk }}">
+                    <button type="submit" class="btn btn-success" value="Approve"> Подтвердить возврат</button>
+                </form>
+                <br>
+                <form action="{% url 'delete_return' return.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" value="Disssaprove">Отказать в возврате</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

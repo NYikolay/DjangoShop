@@ -9,14 +9,22 @@
 
 <div class="card mb-3" style="max-width: 540px;">
     <div class="row g-0">
-        <div class="col-md-4">
-            <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
-        </div>
+
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">{{ product.title }}</h5>
                 <p class="card-text">{{ product.description }}</p>
-                <p class="card-text"><small class="text-muted">{{ product.price }} $</small></p>
+                <p class="card-text"><small class="text-muted">Цена за единицу: {{ product.price }}$</small></p>
+                <p class="card-text"><small class="text-muted">Количество товара на складе: {{ product.quantity_in_stock }}</small></p>
+                {% if request.user.is_admin %}
+                <a href="{% url 'update_product' product.pk %}">Изменить продукт</a>
+                {% endif %}
+                <form action="{% url 'create_purchase' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ purchase_form }}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <button type="submit" value="buy">Купить</button>
+                </form>
             </div>
         </div>
     </div>

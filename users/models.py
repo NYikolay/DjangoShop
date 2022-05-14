@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 
@@ -30,7 +31,7 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, unique=True, verbose_name='Почта')
     username = models.CharField(max_length=60, unique=True, null=True, blank=True, verbose_name='Никнейм')
     wallet = models.BigIntegerField(default=10000)

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Покупки{% endblock %}
+
+{% block content %}
+
+Корзина покупок:
+<a href="{{ request.META.HTTP_REFERER }}">Вернуться на главную страницу</a>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% for purchase in object_list %}
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ purchase.product.title }}</h5>
+                <p class="card-text">{{ purchase.product.description }}</p>
+                <p class="card-text"><small class="text-muted">Цена за единицу: {{ purchase.product.price }} $</small></p>
+                <p class="card-text"><small class="text-muted">Количество покупаемого товара: {{ purchase.quantity_of_products }}</small></p>
+                <p class="card-text"><small class="text-muted">Дата покупки: {{ purchase.created_at }}</small></p>
+                <p class="card-text"><small class="text-muted">Покупатель: {{ purchase.user }}</small></p>
+                <form action="{% url 'return_purchase' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="purchase_id" value="{{ purchase.id }}">
+                    <button type="submit" value="Return order">Возврат товара</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
